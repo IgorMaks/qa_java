@@ -2,37 +2,42 @@ package com.example;
 
 import com.example.Feline;
 import com.example.Lion;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import static org.junit.Assert.assertEquals;
+
 
 @RunWith(Parameterized.class)
 public class LionParameterizedTest {
+    private final String gender;
+    private final boolean hasMane;
+    Feline feline = new Feline();
 
-    private final String lionSex;
-
-    private final boolean doesHasMane;
-
-    public LionParameterizedTest(String lionSex, boolean doesHasMane){
-        this.lionSex = lionSex;
-        this.doesHasMane = doesHasMane;
+    public LionParameterizedTest(String gender, boolean hasMane) {
+        this.gender = gender;
+        this.hasMane = hasMane;
     }
 
     @Parameterized.Parameters
-    public static Object[][] getTestData() {
-        return new Object[][] {
+    public static Object[][] getGenderType() {
+        return new Object[][]{
                 {"Самец", true},
                 {"Самка", false},
+                {"Оно", false}
         };
     }
 
     @Test
-    public void checkThatDoesLionHasMane() throws Exception {
-        Feline feline = new Feline();
-        Lion lion = new Lion(feline, lionSex);
-        boolean actual = lion.doesHaveMane();
-        Assert.assertEquals("У самца льва должна быть грива, а у самки нет", doesHasMane, actual);
+    public void doesHaveManeTest() {
+        try {
+            Lion lion = new Lion(gender, feline);
+            assertEquals(hasMane, lion.doesHaveMane());
+        }
+        catch (Exception thrown) {
+            assertEquals("Используйте допустимые значения пола животного - самей или самка", thrown.getMessage());
+        }
     }
+
 }
